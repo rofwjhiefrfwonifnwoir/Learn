@@ -31,10 +31,10 @@ def run():
         else:
             print(">>> STUDIO IS DOWN. Sending Start Command...")
             s.start()
-            print(">>> SUCCESS: Wake-up signal sent to AWS.")
+            print(">>> SUCCESS: Wake-up signal.")
         print("---------------------------------------")
     except Exception as e:
-        print(f"!!! ERROR: Automation failed: {e}")
+        print(f"!!! ERROR: failed: {e}")
         sys.exit(1)
 
 
