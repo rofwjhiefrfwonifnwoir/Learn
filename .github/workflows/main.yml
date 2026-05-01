@@ -10,10 +10,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
-        uses: actions/checkout
+        uses: actions/checkout@latest
 
       - name: Setup Latest Python
-        uses: actions/setup-python
+        uses: actions/setup-python@latest
         with:
           python-version: '3.x'
           check-latest: true
