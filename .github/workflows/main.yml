@@ -3,7 +3,7 @@ on:
   schedule:
     - cron: '*/5 * * * *'
   repository_dispatch:
-    types: [Pinger]
+    types: [pinger]
   workflow_dispatch:
 
 jobs:
