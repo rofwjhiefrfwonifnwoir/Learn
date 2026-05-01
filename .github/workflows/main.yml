@@ -16,10 +16,10 @@ jobs:
 
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v1 # Start with v4 so Dependabot can track it
+        uses: actions/checkout@v6 # Start with v4 so Dependabot can track it
 
       - name: Setup Latest Python
-        uses: actions/setup-python@v1
+        uses: actions/setup-python@v6
         with:
           python-version: '3.x'
           check-latest: true
