@@ -4,24 +4,31 @@ on:
   schedule:
     - cron: '*/5 * * * *'
   workflow_dispatch:
+  pull_request: # This MUST be here for auto-merge to work
 
 jobs:
   Build:
     runs-on: ubuntu-latest
+    # This gives the bot permission to edit your code
+    permissions:
+      contents: write
+      pull-requests: write
+
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v1
+        uses: actions/checkout@v4 # Start with v4 so Dependabot can track it
 
       - name: Setup Latest Python
-        uses: actions/setup-python@v1
+        uses: actions/setup-python@v5
         with:
           python-version: '3.x'
           check-latest: true
           cache: 'pip'
-          pip-install: -r requirements.txt
 
-      - name: Upgrade pip
-        run: python -m pip install --upgrade pip
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
       - name: Run
         env:
@@ -31,3 +38,10 @@ jobs:
           LIGHTNING_TEAMSPACE: ${{ secrets.LIGHTNING_TEAMSPACE }}
           LIGHTNING_STUDIO_NAME: ${{ secrets.LIGHTNING_STUDIO_NAME }}
         run: python Run.py
+
+      - name: Auto-merge Dependabot PRs
+        if: github.actor == 'dependabot[bot]'
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh pr merge --auto --merge "$PR_URL"
