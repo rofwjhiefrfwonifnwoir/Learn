@@ -19,7 +19,7 @@ jobs:
         uses: actions/checkout@v4 # Start with v4 so Dependabot can track it
 
       - name: Setup Latest Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: '3.x'
           check-latest: true
