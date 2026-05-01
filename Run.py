@@ -15,7 +15,7 @@ def run():
     api_key = os.environ.get("LIGHTNING_API_KEY")
 
     if not all([studio_name, teamspace, user, user_id, api_key]):
-        print("!!! ERROR: Missing required environment variables.")
+        print("ERROR: Missing required environment variables.")
         sys.exit(1)
 
     try:
