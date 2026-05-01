@@ -17,7 +17,6 @@ jobs:
         with:
           python-version: '3.x'
           check-latest: true
-          pip-version: '2.x'
           cache: 'pip'
 
       - name: Install Official SDK
