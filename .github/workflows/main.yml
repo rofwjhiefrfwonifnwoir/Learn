@@ -9,7 +9,7 @@ on:
 
 jobs:
   Build:
-    if: github.event_name != 'schedule' || vars.ENABLE_CRON == 'true'
+    if: github.event_name != 'schedule' || vars.CRON == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 4.5
     permissions:
