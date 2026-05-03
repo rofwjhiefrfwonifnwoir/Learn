@@ -1,10 +1,9 @@
 import os
 import sys
-import time
 
 from lightning_sdk import Status, Studio
 
-_TRANSITIONAL = {Status.Pending, Status.Stopping}
+_TRANSITIONAL = frozenset({Status.Pending, Status.Stopping})
 
 
 def run():
@@ -19,8 +18,7 @@ def run():
         sys.exit(1)
 
     try:
-        s = Studio(name=studio_name, teamspace=teamspace, user=user)
-        time.sleep(2)
+        s = Studio(name=studio_name, teamspace=teamspace, user=user, create_ok=False)
         status = s.status
         print("---------------------------------------")
         print("CHECKING STUDIO STATUS...")
@@ -30,13 +28,16 @@ def run():
             print(">>> STUDIO IS ALIVE. No action needed.")
         elif status in _TRANSITIONAL:
             print(f">>> STUDIO IS {status.value.upper()}. Skipping start.")
-        else:
-            print(">>> STUDIO IS DOWN. Sending Start Command...")
+        elif status == Status.Stopped:
+            print(">>> STUDIO IS DOWN. Sending signal...")
             s.start()
             print(">>> SUCCESS: Wake-up signal.")
+        else:
+            print(f"ERROR: Studio is in an unstartable state: {status.value}.")
+            sys.exit(1)
         print("---------------------------------------")
     except Exception as e:
-        print(f"!!! ERROR: failed: {e}")
+        print(f"ERROR: failed: {e}")
         sys.exit(1)
 
 
