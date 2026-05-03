@@ -1,0 +1,47 @@
+name: Build
+
+on:
+  schedule:
+    - cron: '*/6 * * * *'
+  repository_dispatch:
+    types: [Build]
+  workflow_dispatch:
+
+jobs:
+  Build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4.5
+    permissions:
+      actions: write
+      contents: read
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v6
+
+      - name: Setup Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.x'
+          check-latest: true
+          cache: 'pip'
+          pip-install: -r requirements.txt
+
+      - name: Upgrade pip
+        run: python -m pip install --upgrade pip
+
+      - name: Run
+        env:
+          LIGHTNING_USER_ID: ${{ secrets.LIGHTNING_USER_ID }}
+          LIGHTNING_API_KEY: ${{ secrets.LIGHTNING_API_KEY }}
+          LIGHTNING_USERNAME: ${{ secrets.LIGHTNING_USERNAME }}
+          LIGHTNING_TEAMSPACE: ${{ secrets.LIGHTNING_TEAMSPACE }}
+          LIGHTNING_STUDIO_NAME: ${{ secrets.LIGHTNING_STUDIO_NAME }}
+        run: python Run.py
+
+      - name: Cleanup Workflow
+        uses: Mattraks/delete-workflow-runs@v2
+        with:
+          token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          retain_days: 0
+          keep_minimum_runs: 0
